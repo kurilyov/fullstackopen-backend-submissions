@@ -2,7 +2,8 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 app.use(express.json())
-app.use(morgan('tiny'))
+morgan.token('body', (req, res) => JSON.stringify(req.body));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 const PORT = 3001
 
@@ -61,6 +62,8 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     const body = req.body
+
+    console.log(req.method);
 
     if (!body.name) {
         return res.status(400).json({
